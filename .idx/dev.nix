@@ -7,9 +7,12 @@
   packages = [
     pkgs.php81
     pkgs.php81Packages.composer
+    pkgs.libsecret
+    pkgs.nodejs
   ];
 
   env = {
+    # Overrride nixos php settings
     PHP_INI_SCAN_DIR = "/home/user/moodle/php_config";
   };
   
@@ -18,10 +21,10 @@
     # "vscodevim.vim"
   ];
 
-  #  idx.workspace.onCreate = {
-  #     create-and-setup-project="git clone --depth 1 -b MOODLE_403_STABLE https://github.com/moodle/moodle.git www &&
-  #                               ";
-  #  };
+   idx.workspace.onCreate = {
+      create-and-setup-project="git clone --depth 1 -b MOODLE_403_STABLE https://github.com/moodle/moodle.git www";
+   };
+  
   # preview configuration, identical to monospace.json
   idx.previews = {
     enable = true;
