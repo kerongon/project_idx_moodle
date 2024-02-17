@@ -17,16 +17,21 @@
   idx.extensions = [
     # "vscodevim.vim"
   ];
+
+  #  idx.workspace.onCreate = {
+  #     create-and-setup-project="git clone --depth 1 -b MOODLE_403_STABLE https://github.com/moodle/moodle.git www &&
+  #                               ";
+  #  };
   # preview configuration, identical to monospace.json
   idx.previews = {
-    # enable = true;
-    # previews = [
-    #   {
-    #     command = ["/usr/bin/php" "-S" "0.0.0.0:$PORT"];
-    #     cwd = "www";
-    #     manager = "web";
-    #     id = "web";
-    #   }
-    # ];
+    enable = true;
+    previews = [
+      {
+        command = ["/usr/bin/php" "-S" "0.0.0.0:$PORT"];
+        cwd = "www";
+        manager = "web";
+        id = "web";
+      }
+    ];
   };
 }
