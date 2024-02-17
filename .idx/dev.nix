@@ -3,14 +3,15 @@
 { pkgs, ... }: {
   channel = "stable-23.11"; # "stable-23.11" or "unstable"
   # Use https://search.nixos.org/packages to  find packages
-
+#
   packages = [
     pkgs.php81
     pkgs.php81Packages.composer
-    pkgs.direnv
   ];
 
-  env = {};
+  env = {
+    PHP_INI_SCAN_DIR = "/home/user/moodle/php_config";
+  };
   
   # search for the extension on https://open-vsx.org/ and use "publisher.id"
   idx.extensions = [
@@ -18,5 +19,14 @@
   ];
   # preview configuration, identical to monospace.json
   idx.previews = {
+    # enable = true;
+    # previews = [
+    #   {
+    #     command = ["/usr/bin/php" "-S" "0.0.0.0:$PORT"];
+    #     cwd = "www";
+    #     manager = "web";
+    #     id = "web";
+    #   }
+    # ];
   };
 }
