@@ -11,19 +11,20 @@
     pkgs.nodejs
   ];
 
-  env = {
-    # Overrride nixos php settings
-    PHP_INI_SCAN_DIR = "/home/user/moodle/php_config";
-  };
-  
+
   # search for the extension on https://open-vsx.org/ and use "publisher.id"
   idx.extensions = [
     # "vscodevim.vim"
   ];
 
-   idx.workspace.onCreate = {
-      create-and-setup-project="git clone --depth 1 -b MOODLE_403_STABLE https://github.com/moodle/moodle.git www";
-   };
+  idx.workspace.onCreate = {
+    make-script-excutable="chmod +x setup.sh && ./setup.sh";
+    create-and-setup-project="git clone --depth 1 -b MOODLE_403_STABLE https://github.com/moodle/moodle.git www && mkdir  php_config && cp $(find /nix/store -name 'php.ini' -path '*php-8.1.27/etc*' -print) php_config/php.ini && cp $(find /nix/store -name 'php.ini' -path '*php-with-extensions-8.1.27/lib*' -print) php_config/extensions.ini && sed -i 's/;max_input_vars = 1000/max_input_vars = 6000/' php_config/php.ini";};
+
+  env = {
+    # Overrride nixos php settings
+    PHP_INI_SCAN_DIR = "/home/user/moodle/php_config";
+  };
   
   # preview configuration, identical to monospace.json
   idx.previews = {
