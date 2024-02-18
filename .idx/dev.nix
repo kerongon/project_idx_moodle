@@ -24,9 +24,8 @@
 
   env = {
     # Overrride nixos php settings
-    PHP_INI_SCAN_DIR = "/home/user/moodle/php_config";
+    PHP_INI_SCAN_DIR = "/home/user/project_idx_moodle/php_config";
   };
-  
   # preview configuration, identical to monospace.json
   idx.previews = {
     enable = true;
