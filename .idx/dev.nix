@@ -19,13 +19,14 @@
 
   # set up moodle when workspace is created
   idx.workspace.onCreate = {
-    set-up-project = "chmod +x setup.sh && ./setup.sh";
+    set-up-project = "chmod +x setup.sh && ./setup.sh && echo https://9000-$WEB_HOS";
   };
 
   env = {
     # Overrride nixos php settings
     PHP_INI_SCAN_DIR = "/home/user/project_idx_moodle/php_config";
   };
+
   # preview configuration, identical to monospace.json
   idx.previews = {
     enable = true;
