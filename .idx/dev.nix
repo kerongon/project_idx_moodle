@@ -19,7 +19,7 @@
 
   # set up moodle when workspace is created
   idx.workspace.onCreate = {
-    set-up-project = "chmod +x setup.sh && ./setup.sh && echo https://9000-$WEB_HOS";
+    set-up-project = "chmod +x .idx/setup.sh && .idx/setup.sh && echo https://9000-$WEB_HOST";
   };
 
   env = {
