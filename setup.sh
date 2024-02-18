@@ -14,3 +14,6 @@ cp $(find /nix/store -name 'php.ini' -path '*php-with-extensions-8.1.27/lib*' -p
 
 # Increase max_input_vars value for Moodle
 sed -i 's/;max_input_vars = 1000/max_input_vars = 6000/' php_config/php.ini
+
+# Go to Moodle directory
+cd www
