@@ -9,10 +9,23 @@ check_dependencies() {
     command -v cp >/dev/null 2>&1 || { echo >&2 "I require cp but it's not installed.  Aborting."; exit 1; }
     command -v find >/dev/null 2>&1 || { echo >&2 "I require find but it's not installed.  Aborting."; exit 1; }
     command -v sed >/dev/null 2>&1 || { echo >&2 "I require sed but it's not installed.  Aborting."; exit 1; }
+    command -v docker >/dev/null 2>&1 || { echo >&2 "I require docker but it's not installed.  Aborting."; exit 1; }
+    command -v docker-compose >/dev/null 2>&1 || { echo >&2 "I require docker-compose but it's not installed.  Aborting."; exit 1; }
 }
 
+# Function to cleanup on error
+cleanup() {
+    echo "An error occurred. Cleaning up and removing www..."
+    rm -rf "$HOME/project_idx_moodle/www"
+    echo "Removing php_config..."
+    rm -rf "$HOME/project_idx_moodle/php_config"
+    echo "Stopping and removing Docker containers, networks, images, and volumes..."
+    cd "$HOME/project_idx_moodle/.idx" && docker-compose down --rmi all --volumes
+}
 # Main script function
 main() {
+    # Set a trap to cleanup on error
+    trap cleanup ERR
     # Get start time
     local start_time=$(date +%s)
     # Clone the Moodle repository
@@ -34,6 +47,36 @@ main() {
     # Increase max_input_vars value for Moodle
     echo "Increasing max_input_vars value for Moodle..."
     sed -i 's/;max_input_vars = 1000/max_input_vars = 6000/' php_config/php.ini
+
+     # Change to Docker Compose directory
+    echo "Changing to Docker Compose directory..."
+    cd "$HOME/project_idx_moodle/.idx"
+
+    # Start Docker Compose
+    echo "Starting Docker Compose..."
+    docker-compose up -d
+
+    # Start Docker container
+    echo "Starting Docker container..."
+    docker start idx-db-1
+
+    # Wait for MariaDB to be ready
+    until docker exec idx-db-1 mariadb -u root -proot -e "SELECT 1" >/dev/null 2>&1; do
+        echo "Waiting for MariaDB server to accept connections..."
+        sleep 5
+    done
+
+
+    # Create database in Docker container
+    echo "Creating database in Docker container..."
+    # docker exec -it idx-db-1 mariadb -h 127.0.0.1 -u root -proot -e "CREATE DATABASE moodle;"
+    docker exec -it idx-db-1 mariadb -u root -proot -e "CREATE DATABASE moodle;"
+
+    echo "Database Information:"
+    echo "DB_USER: root"
+    echo "DB_PASSWORD: root"
+    echo "DB_HOST: 127.0.0.1"
+    echo "DB_NAME: moodle"
 
      # Get end time and calculate duration
     local end_time=$(date +%s)

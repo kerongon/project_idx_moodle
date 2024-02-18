@@ -9,9 +9,10 @@
     pkgs.php81Packages.composer
     pkgs.libsecret
     pkgs.nodejs
+    pkgs.docker-compose
   ];
-
-
+  # Enable rootless docker
+  services.docker.enable = true;
   # search for the extension on https://open-vsx.org/ and use "publisher.id"
   idx.extensions = [
     # "vscodevim.vim"
