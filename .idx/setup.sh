@@ -26,6 +26,13 @@ check_file() {
         touch "$1"
     fi
 }
+# Function to check if directory exists
+check_directory() {
+    if [ ! -d "$1" ]; then
+        echo "Directory $1 does not exist. Creating now..."
+        mkdir -p "$1"
+    fi
+}
 
 # Function to cleanup on error
 cleanup() {
@@ -35,8 +42,8 @@ cleanup() {
     rm -rf "$HOME/project_idx_moodle/php_config"
     echo "Stopping and removing Docker containers, networks, images, and volumes..."
     cd "$HOME/project_idx_moodle/.idx" && docker-compose down --rmi all --volumes
-    echo "Removing docker data..."
-    rm -rf "$HOME/.data"
+    echo "Removing moodledata folder..."
+    rm -rf "$HOME/moodledata"
 }
 # Main script function
 main() {
@@ -84,7 +91,6 @@ main() {
 
     # Create database in Docker container
     echo "Creating database in Docker container..."
-    # docker exec -it idx-db-1 mariadb -h 127.0.0.1 -u root -proot -e "CREATE DATABASE moodle;"
     docker exec -it idx-db-1 mariadb -u root -proot -e "CREATE DATABASE moodle;"
 
     #Display DB information
@@ -102,7 +108,7 @@ main() {
     echo "updating config file"
     cp $HOME/project_idx_moodle/www/config-dist.php $HOME/project_idx_moodle/www/config.php
     echo "Creating the moodledata directory..."
-    mkdir /home/user/moodledata
+    check_directory /home/user/moodledata
 
 
     # Use sed to find and replace the variables in config.php
@@ -121,7 +127,7 @@ main() {
 
     echo "Script completed in $duration seconds."
 
-    echo "Mailpit Listen URL: localhost:1025";
+    echo "SMTP Hosts: 127.0.0.1:1025";
 }
 
 # Check dependencies before running script
