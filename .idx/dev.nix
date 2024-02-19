@@ -25,8 +25,8 @@
   };
 
   idx.workspace.onStart = {
-    start-mariadb = "docker start idx-db-1";
-    start-mailpit = "docker start mailpit";
+    start-mariadb = "docker start idx-db-1 > /dev/null";
+    start-mailpit = "docker start mailpit > /dev/null";
   };
  
   env = {

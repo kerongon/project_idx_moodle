@@ -18,8 +18,11 @@ services:
     image: mariadb
     container_name: idx-db-1
     environment:
-      MYSQL_ROOT_PASSWORD: root
+       MARIADB_ROOT_PASSWORD: root
     ports:
       - "3306:3306"
     volumes:
-      - /home/user/.mariadb_data:/var/lib/mysql
+      - mariadb_data:/var/lib/mysql
+# At the end of your docker-compose file
+volumes:
+  mariadb_data:
