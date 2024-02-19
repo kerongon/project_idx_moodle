@@ -82,20 +82,20 @@ main() {
         sleep 5
     done
 
-    echo "Checking if database exists in Docker container..."
-    DB_EXISTS=$(docker exec -it idx-db-1 mariadb -u root -proot -e "SHOW DATABASES LIKE 'moodle';" | grep moodle)
+    # echo "Checking if database exists in Docker container..."
+    # DB_EXISTS=$(docker exec -it idx-db-1 mariadb -u root -proot -e "SHOW DATABASES LIKE 'moodle';" | grep moodle)
 
-    if [ -z "$DB_EXISTS" ]; then
-        # Create database in Docker container
-        echo "Database does not exist. Creating database..."
-        docker exec -it idx-db-1 mariadb -u root -proot -e "CREATE DATABASE moodle;"
-    else
-        echo "Database already exists. Skipping creation..."
-    fi
+    # if [ -z "$DB_EXISTS" ]; then
+    #     # Create database in Docker container
+    #     echo "Database does not exist. Creating database..."
+    #     docker exec -it idx-db-1 mariadb -u root -proot -e "CREATE DATABASE moodle;"
+    # else
+    #     echo "Database already exists. Skipping creation..."
+    # fi
     # Create database in Docker container
-    # echo "Creating database in Docker container..."
-    # # docker exec -it idx-db-1 mariadb -h 127.0.0.1 -u root -proot -e "CREATE DATABASE moodle;"
-    # docker exec -it idx-db-1 mariadb -u root -proot -e "CREATE DATABASE moodle;"
+    echo "Creating database in Docker container..."
+    # docker exec -it idx-db-1 mariadb -h 127.0.0.1 -u root -proot -e "CREATE DATABASE moodle;"
+    docker exec -it idx-db-1 mariadb -u root -proot -e "CREATE DATABASE moodle;"
 
     #Display DB information
     echo "Database Information:"
