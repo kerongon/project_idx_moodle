@@ -74,7 +74,7 @@ main() {
 
     # Start Docker container
     echo "Starting Docker maiadb container..."
-    docker start idx-db-1
+    docker start idx-db-1 > /dev/null
 
     # Wait for MariaDB to be ready
     until docker exec idx-db-1 mariadb -u root -proot -e "SELECT 1" >/dev/null 2>&1; do
@@ -82,16 +82,6 @@ main() {
         sleep 5
     done
 
-    # echo "Checking if database exists in Docker container..."
-    # DB_EXISTS=$(docker exec -it idx-db-1 mariadb -u root -proot -e "SHOW DATABASES LIKE 'moodle';" | grep moodle)
-
-    # if [ -z "$DB_EXISTS" ]; then
-    #     # Create database in Docker container
-    #     echo "Database does not exist. Creating database..."
-    #     docker exec -it idx-db-1 mariadb -u root -proot -e "CREATE DATABASE moodle;"
-    # else
-    #     echo "Database already exists. Skipping creation..."
-    # fi
     # Create database in Docker container
     echo "Creating database in Docker container..."
     # docker exec -it idx-db-1 mariadb -h 127.0.0.1 -u root -proot -e "CREATE DATABASE moodle;"
@@ -106,10 +96,14 @@ main() {
 
     # Start Mailpit with db 
     echo "Starting mailpit"
-    docker start mailpit
+    docker start mailpit > /dev/null
     
     # Copy the config-dist.php file to config.php
+    echo "updating config file"
     cp $HOME/project_idx_moodle/www/config-dist.php $HOME/project_idx_moodle/www/config.php
+    echo "Creating the moodledata directory..."
+    mkdir /home/user/moodledata
+
 
     # Use sed to find and replace the variables in config.php
     sed -i 's/\$CFG->dbtype    = '\''pgsql'\'';/\$CFG->dbtype    = '\''mariadb'\'';/' $HOME/project_idx_moodle/www/config.php
@@ -126,6 +120,8 @@ main() {
     local duration=$((end_time - start_time))
 
     echo "Script completed in $duration seconds."
+
+    echo "Mailpit Listen URL: localhost:1025";
 }
 
 # Check dependencies before running script
