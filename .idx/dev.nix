@@ -10,6 +10,7 @@
     pkgs.libsecret
     pkgs.nodejs
     pkgs.docker-compose
+    pkgs.sqlite
   ];
   # Enable rootless docker
   services.docker.enable = true;
@@ -20,11 +21,16 @@
 
   # set up moodle when workspace is created
   idx.workspace.onCreate = {
-    set-up-project = "chmod +x .idx/setup.sh && .idx/setup.sh && echo https://9000-$WEB_HOST";
+    create-and-setup-project = "chmod +x .idx/setup.sh && .idx/setup.sh && echo 'Web URL: ' https://9002-$WEB_HOST && echo 'Mailpit URL: ' https://8025-$WEB_HOST";
   };
 
+  idx.workspace.onStart = {
+    start-mariadb = "docker start idx-db-1";
+    start-mailpit = "docker start mailpit";
+  };
+ 
   env = {
-    # Overrride nixos php settings
+    # Override nixos php settings
     PHP_INI_SCAN_DIR = "/home/user/project_idx_moodle/php_config";
   };
 

@@ -1,5 +1,19 @@
 version: '3'
 services:
+  mailpit:
+    image: axllent/mailpit
+    container_name: mailpit
+    restart: always
+    volumes:
+      - /home/user/.data:/data
+    ports:
+      - 8025:8025
+      - 1025:1025
+    environment:
+      MP_MAX_MESSAGES: 1000
+      MP_DATA_FILE: /data/mailpit.db
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
   db:
     image: mariadb
     container_name: idx-db-1
@@ -7,5 +21,5 @@ services:
       MYSQL_ROOT_PASSWORD: root
     ports:
       - "3306:3306"
-
-      
+    volumes:
+      - /home/user/.mariadb_data:/var/lib/mysql
