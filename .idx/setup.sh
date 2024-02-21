@@ -78,36 +78,11 @@ main() {
     # Start Docker Compose
     echo "Starting Docker Compose..."
     docker-compose up -d
-
-    # Start Docker container
-    echo "Starting Docker maiadb container..."
-    docker start idx-db-1 > /dev/null
-
-    # Wait for MariaDB to be ready
-    until docker exec idx-db-1 mariadb -u root -proot -e "SELECT 1" >/dev/null 2>&1; do
-        echo "Waiting for MariaDB server to accept connections..."
-        sleep 5
-    done
-
-    # Create database in Docker container
-    echo "Creating database in Docker container..."
-    docker exec -it idx-db-1 mariadb -u root -proot -e "CREATE DATABASE moodle;"
-
-    #Display DB information
-    echo "Database Information:"
-    echo "DB_USER: root"
-    echo "DB_PASSWORD: root"
-    echo "DB_HOST: 127.0.0.1"
-    echo "DB_NAME: moodle"
-
-    # Start Mailpit with db 
-    echo "Starting mailpit"
-    docker start mailpit > /dev/null
+    # docker-compose up --force-recreate --build -d # for testing
     
     # Copy the config-dist.php file to config.php
     echo "updating config file"
     cp $HOME/project_idx_moodle/www/config-dist.php $HOME/project_idx_moodle/www/config.php
-    echo "Creating the moodledata directory..."
     check_directory /home/user/moodledata
 
 
@@ -120,14 +95,23 @@ main() {
     sed -i 's#\$CFG->dataroot  = '\''/home/example/moodledata'\'';#\$CFG->dataroot  = '\''/home/user/moodledata'\'';#' $HOME/project_idx_moodle/www/config.php
     sed -i 's/\$CFG->directorypermissions = 02777;/\$CFG->directorypermissions = 0777;/' $HOME/project_idx_moodle/www/config.php
 
-
      # Get end time and calculate duration
     local end_time=$(date +%s)
     local duration=$((end_time - start_time))
 
-    echo "Script completed in $duration seconds."
+    #Display DB information
+    echo "Database Information:"
+    echo "DB_USER: root"
+    echo "DB_PASSWORD: root"
+    echo "DB_HOST: 127.0.0.1"
+    echo "DB_NAME: moodle"
 
-    echo "SMTP Hosts: 127.0.0.1:1025";
+    echo "SMTP HOST: 127.0.0.1:1025";
+    echo 'Mailpit URL: ' https://8025-$WEB_HOST
+    echo 'PHPMYADMIN URL: ' https://8020-${WEB_HOST}
+    echo 'Web URL: ' https://9002-$WEB_HOST
+
+    echo "Script completed in $duration seconds."
 }
 
 # Check dependencies before running script

@@ -11,6 +11,7 @@
     pkgs.nodejs
     pkgs.docker-compose
     pkgs.sqlite
+    # pkgs.mariadb
   ];
   # Enable rootless docker
   services.docker.enable = true;
@@ -21,12 +22,11 @@
 
   # set up moodle when workspace is created
   idx.workspace.onCreate = {
-    create-and-setup-project = "chmod +x .idx/setup.sh && .idx/setup.sh && echo 'Web URL: ' https://9002-$WEB_HOST && echo 'Mailpit URL: ' https://8025-$WEB_HOST";
+    create-and-setup-project = "chmod +x .idx/setup.sh && .idx/setup.sh";
   };
 
   idx.workspace.onStart = {
-    start-mariadb = "docker start idx-db-1 > /dev/null";
-    start-mailpit = "docker start mailpit > /dev/null";
+    start-docker-containers = "docker start idx-db-1 && docker start idx-phpmyadmin-1 && docker start mailpit";
   };
  
   env = {
