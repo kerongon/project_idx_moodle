@@ -61,11 +61,11 @@ main() {
 
     # Find and copy the php.ini file
     echo "Finding and copying the php.ini file..."
-    cp "$(find /nix/store -name 'php.ini' -path '*php-8.1.27/etc*' -print -quit)" php_config/php.ini
+    cp "$(find /nix/store -name 'php.ini' -path '*php-8.1.*/etc*' -print -quit)" php_config/php.ini
 
     # Find and copy the extensions.ini file
     echo "Finding and copying the extensions.ini file..."
-    cp "$(find /nix/store -name 'php.ini' -path '*php-with-extensions-8.1.27/lib*' -print -quit)" php_config/extensions.ini
+    cp "$(find /nix/store -name 'php.ini' -path '*php-with-extensions-8.1.*/lib*' -print -quit)" php_config/extensions.ini
 
     # Increase max_input_vars value for Moodle
     echo "Increasing max_input_vars value for Moodle..."
